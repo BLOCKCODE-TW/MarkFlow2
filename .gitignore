@@ -38,3 +38,7 @@ yarn-error.log*
 *.swp
 *.lock
 coverage/
+
+# 專案配置檔案
+/src/
+/output/
