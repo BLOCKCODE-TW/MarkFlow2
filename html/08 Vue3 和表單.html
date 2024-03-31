@@ -1,0 +1,97 @@
+<h1 id="vue3">Vue3 和表單</h1>
+<p>在 Vue3 中處理表單、驗證和錯誤處理是開發中常見的需求，我們將通過下面的內容和範例來進行詳細解說。</p>
+<h3 id="">表單處理基礎</h3>
+<p>在 Vue3 中，表單處理通常涉及到模板綁定（Template Binding）和響應式數據（Reactive Data）。Vue3 提供了 <code>v-model</code> 指令來實現雙向數據綁定，這對於表單處理特別有用。</p>
+<h4 id="-1">範例：基本文本輸入</h4>
+<pre><code class="vue language-vue">&lt;template&gt;
+  &lt;form @submit.prevent="submitForm"&gt;
+    &lt;input v-model="formData.name" type="text" placeholder="請輸入您的名字" /&gt;
+    &lt;button type="submit"&gt;提交&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref } from 'vue';
+
+const formData = ref({
+  name: ''
+});
+
+const submitForm = () =&gt; {
+  alert(`提交的名字是：${formData.value.name}`);
+};
+&lt;/script&gt;
+</code></pre>
+<p>在這個範例中，我們使用了 <code>v-model</code> 來綁定一個文本輸入框的值到 <code>formData.name</code>。表單提交時，將阻止其預設行為（刷新頁面），並通過 <code>submitForm</code> 方法彈出一個對話框顯示輸入的名字。</p>
+<h3 id="-2">表單驗證和錯誤處理</h3>
+<p>驗證表單輸入是確保數據質量和用戶體驗的重要一環。Vue3 本身不包含內置的表單驗證功能，但我們可以通過簡單的邏輯和一些第三方庫來實現。</p>
+<h4 id="-3">範例：簡單的表單驗證</h4>
+<p>假設我們需要確保用戶名不為空，並且年齡是一個有效的數字：</p>
+<pre><code class="vue language-vue">&lt;template&gt;
+  &lt;form @submit.prevent="submitForm"&gt;
+    &lt;div&gt;
+      &lt;input v-model="formData.name" type="text" placeholder="姓名" /&gt;
+      &lt;p v-if="errors.name"&gt;{{ errors.name }}&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+      &lt;input v-model.number="formData.age" type="number" placeholder="年齡" /&gt;
+      &lt;p v-if="errors.age"&gt;{{ errors.age }}&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;button type="submit"&gt;提交&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref, reactive, watchEffect } from 'vue';
+
+const formData = reactive({
+  name: '',
+  age: null
+});
+
+const errors = reactive({
+  name: '',
+  age: ''
+});
+
+watchEffect(() =&gt; {
+  if (!formData.name) {
+    errors.name = '姓名為必填項。';
+  } else {
+    errors.name = '';
+  }
+
+  if (!formData.age || isNaN(formData.age) || formData.age &lt; 0) {
+    errors.age = '請輸入有效的年齡。';
+  } else {
+    errors.age = '';
+  }
+});
+
+const submitForm = () =&gt; {
+  if (!errors.name &amp;&amp; !errors.age) {
+    alert(`提交成功：${formData.name}, ${formData.age}`);
+  } else {
+    alert('表單有誤，請修正後再次提交。');
+  }
+};
+&lt;/script&gt;
+</code></pre>
+<p>在這個範例中，我們使用了 <code>reactive</code> 函數來創建一個響應式的表單數據對象和錯誤信息對象。利用 <code>watchEffect</code> 監聽 <code>formData</code> 的變化，並進行實時驗證，更新 <code>errors</code> 對象。表單提交時，檢查是否有錯誤信息，如果沒有則彈出成功提交的提示。</p>
+<h2 id="scriptsetup">script setup</h2>
+<p>在Vue.js或類似的現代前端框架中，<code>&lt;script setup&gt;</code>和普通的<code>&lt;script&gt;</code>標籤都被用來撰寫JavaScript或TypeScript代碼，但它們在使用和語法上有顯著的不同：</p>
+<h3 id="scriptsetup-1"><code>&lt;script setup&gt;</code></h3>
+<ul>
+<li><strong>Composition API 精簡語法</strong>：<code>&lt;script setup&gt;</code>是一種針對Vue 3引入的精簡語法，旨在使使用Composition API更加簡潔和易於閱讀。它允許你直接定義組件的setup函數內容，而無需明確定義一個<code>setup</code>函數。</li>
+<li><strong>自動導入</strong>：在<code>&lt;script setup&gt;</code>中聲明的變量和方法會自動被視為組件的一部分，可以直接在模板中使用，無需額外的return語句。</li>
+<li><strong>更好的類型推斷</strong>：使用<code>&lt;script setup&gt;</code>可以獲得更好的TypeScript類型推斷支持。</li>
+<li><strong>簡化的API使用</strong>：某些Vue特性，如<code>defineProps</code>和<code>defineEmits</code>，可以直接在<code>&lt;script setup&gt;</code>中使用，無需導入。</li>
+</ul>
+<h3 id="script"><code>&lt;script&gt;</code></h3>
+<ul>
+<li><strong>傳統選項API</strong>：使用普通的<code>&lt;script&gt;</code>標籤通常意味著你在使用Vue的選項API。這是Vue較早版本中使用的方法，通過定義一個包含<code>data</code>、<code>methods</code>、<code>props</code>等選項的對象來創建組件。</li>
+<li><strong>顯式定義</strong>：在選項API中，所有的數據和方法都需要被顯式地包裝在對象選項中，並且需要使用<code>this</code>關鍵字來訪問組件的上下文。</li>
+<li><strong>更適合簡單組件</strong>：對於一些簡單的組件，使用選項API和普通的<code>&lt;script&gt;</code>標籤可能會更簡單直觀。</li>
+</ul>
+<h3 id="-4">結論</h3>
+<p>選擇<code>&lt;script setup&gt;</code>還是普通的<code>&lt;script&gt;</code>取決於你的具體需求和偏好。如果你喜歡更現代、更簡潔的語法，並且正在使用Vue 3的Composition API，那麼<code>&lt;script setup&gt;</code>可能是更好的選擇。如果你正在處理一個簡單的組件，或者更習慣於Vue的傳統選項API，那麼使用普通的<code>&lt;script&gt;</code>可能會更適合你。</p>

@@ -1,0 +1,40 @@
+# 依賴項目錄
+/node_modules/
+
+# 環境配置檔案
+.env
+
+# 日誌檔案
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 編輯器目錄和檔案
+/.vscode/
+/.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 操作系統產生的檔案
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 打包目錄
+/dist
+/build
+
+# 診斷報告檔案
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 其他
+*.swp
+*.lock
+coverage/

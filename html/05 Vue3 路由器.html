@@ -1,0 +1,222 @@
+<h1 id="vue3">Vue3 路由器</h1>
+<p>在Vue3中設置Vue Router並創建路由與導航，是實現單頁面應用程序(SPA)的關鍵一步。Vue Router是Vue.js的官方路由管理器，它可以讓你通過不同的URL訪問到不同的頁面內容，而不需要重新加載整個頁面。以下是在Vue3中設置Vue Router的步驟以及如何創建基本路由和導航的範例。</p>
+<h3 id="vuerouter">安裝Vue Router</h3>
+<p>首先，你需要在你的Vue3項目中安裝Vue Router。如果你是通過Vue CLI創建的項目，可以通過npm或yarn來安裝Vue Router：</p>
+<pre><code class="bash language-bash">npm install vue-router@4
+# 或者
+yarn add vue-router@4
+</code></pre>
+<p>請確保安裝的是Vue Router 4，這是專為Vue 3設計的版本。</p>
+<h3 id="">設置路由</h3>
+<p>接下來，你需要創建一個路由配置文件，通常命名為<code>router/index.js</code>，然後設置你的路由：</p>
+<pre><code class="javascript language-javascript">// router/index.js
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '../views/Home.vue'
+import About from '../views/About.vue'
+
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes
+})
+
+export default router
+</code></pre>
+<p>這裡，我們導入了<code>createRouter</code>和<code>createWebHistory</code>，定義了兩個路由：Home和About。每個路由都關聯到一個組件，當路由匹配時，對應的組件將被渲染。</p>
+<h3 id="vue">配置Vue應用以使用路由</h3>
+<p>在你的Vue應用入口文件中（通常是<code>main.js</code>或<code>main.ts</code>），你需要導入創建的路由並告訴Vue應用使用這個路由：</p>
+<pre><code class="javascript language-javascript">import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+
+createApp(App).use(router).mount('#app')
+</code></pre>
+<p>這裡，我們將路由實例作為插件添加到Vue應用中。</p>
+<h3 id="-1">創建導航鏈接</h3>
+<p>在Vue組件中，你可以使用<code>router-link</code>組件來創建導航鏈接，讓用戶可以點擊跳轉到不同的頁面：</p>
+<pre><code class="html language-html">&lt;template&gt;
+  &lt;div&gt;
+    &lt;router-link to="/"&gt;Home&lt;/router-link&gt;
+    &lt;router-link to="/about"&gt;About&lt;/router-link&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+</code></pre>
+<p><code>&lt;router-link&gt;</code>的<code>to</code>屬性指定了要導航到的路由的路徑。</p>
+<h3 id="-2">顯示路由組件</h3>
+<p>你需要一個<code>&lt;router-view&gt;</code>組件在你的應用中作為占位符，用於顯示當前路由匹配的組件的內容：</p>
+<pre><code class="html language-html">&lt;template&gt;
+  &lt;div id="app"&gt;
+    &lt;router-view&gt;&lt;/router-view&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+</code></pre>
+<p>當路由改變時，<code>&lt;router-view&gt;</code>中的內容會自動更新為對應路由的組件。</p>
+<p>通過上述步驟，你就可以在Vue3應用中設置Vue Router，創建基本的路由和導航了。這將幫助你建立更加動態和互動的單頁面應用。</p>
+<h2 id="env">Env</h2>
+<p>在 Vue 3 專案中使用 <code>.env</code> 檔案可以有效地管理環境變量，便於在不同的開發、測試、和生產環境中切換配置。以下是如何設計常用的標準 <code>.env</code> 檔案，以及如何啟動特定於開發環境的 <code>.env.development</code> 檔案的步驟。</p>
+<h3 id="env-1">常用的 <code>.env</code> 檔案設計</h3>
+<p>一個常用且標準的 <code>.env</code> 檔案應該包含以下幾個部分：</p>
+<ol>
+<li><strong>基本應用設定</strong>：如應用的名稱、版本號等。</li>
+<li><strong>API 端點</strong>：不同環境下後端服務的基本 URL。</li>
+<li><strong>認證密鑰</strong>：如 API 密鑰，但注意不要將敏感資訊存放在前端代碼或公開的 <code>.env</code> 檔案中。</li>
+<li><strong>功能開關</strong>：功能特性開關，便於控制哪些功能在特定環境下可用。</li>
+</ol>
+<h4 id="env-2">示例 <code>.env</code> 檔案</h4>
+<pre><code class="env language-env"># 基本應用設定
+VUE_APP_NAME=MyApp
+VUE_APP_VERSION=1.0.0
+
+# API 端點
+VUE_APP_API_URL=https://api.example.com
+
+# 認證密鑰（示例，實際應用中請小心處理）
+VUE_APP_API_KEY=your_api_key_here
+
+# 功能開關
+VUE_APP_FEATURE_X_ENABLED=true
+</code></pre>
+<h3 id="env-3">啟動不同的 <code>.env</code> 檔案</h3>
+<p>Vue CLI 在啟動或建構應用時，會根據不同的命令和模式，自動加載相應的 <code>.env</code> 檔案。例如，當在開發模式下啟動應用時，Vue CLI 會自動加載 <code>.env.development</code> 檔案（如果存在）。</p>
+<ul>
+<li><strong><code>.env</code></strong>：所有的環境都會加載這個檔案。如果有與其他 <code>.env</code> 檔案相同的變量，這個檔案中的設定會被覆蓋。</li>
+<li><strong><code>.env.local</code></strong>：除了 <code>test</code> 模式，其他模式都會加載這個檔案。它不會被提交到版本控制系統。</li>
+<li><strong><code>.env.[mode]</code></strong>：只有在指定的模式下才會加載這個檔案，例如 <code>.env.development</code>。</li>
+<li><strong><code>.env.[mode].local</code></strong>：特定模式下的本地設定，例如 <code>.env.development.local</code>。它也不會被提交到版本控制系統。</li>
+</ul>
+<h4 id="-3">啟動開發環境配置</h4>
+<ol>
+<li>在專案根目錄下創建 <code>.env.development</code> 檔案。</li>
+<li>在 <code>.env.development</code> 檔案中加入開發環境特有的環境變量。</li>
+</ol>
+<pre><code class="env language-env"># .env.development
+VUE_APP_API_URL=https://dev-api.example.com
+VUE_APP_FEATURE_X_ENABLED=false
+</code></pre>
+<ol start="3">
+<li>使用 Vue CLI 提供的命令啟動開發服務：</li>
+</ol>
+<pre><code class="bash language-bash">npm run serve
+</code></pre>
+<p>或者</p>
+<pre><code class="bash language-bash">yarn serve
+</code></pre>
+<p>這樣，當您在開發模式下運行應用時，Vue CLI 會自動加載 <code>.env.development</code> 檔案中的設定。這樣您就可以為不同的環境配置不同的環境變量，便於管理和切換。</p>
+<p>若要透過 Vue CLI 指定使用一個特定的 <code>.env</code> 檔案，例如 <code>.env.staging</code>，需要透過設定 <code>--mode</code> 選項來實現。Vue CLI 會根據指定的模式來加載相對應名稱的 <code>.env</code> 檔案。例如，若指定 <code>--mode staging</code>，則 Vue CLI 會尋找並加載 <code>.env.staging</code> 檔案中的環境變量。</p>
+<ol>
+<li><p><strong>創建 <code>.env.staging</code> 檔案</strong>：</p>
+<p>在專案的根目錄下創建一個名為 <code>.env.staging</code> 的檔案。在這個檔案中，你可以定義適用於預上線環境的環境變量。</p>
+<pre><code class="env language-env"># .env.staging
+VUE_APP_API_URL=https://staging-api.example.com
+VUE_APP_FEATURE_FLAG=true
+</code></pre></li>
+<li><p><strong>通過 CLI 指令使用特定模式啟動或建構專案</strong>：</p></li>
+</ol>
+<ul>
+<li><p><strong>啟動開發服務</strong>：</p>
+<pre><code class="bash language-bash"> npm run serve -- --mode staging
+</code></pre>
+<p>或者，如果你使用 <code>yarn</code>：</p>
+<pre><code class="bash language-bash"> yarn serve --mode staging
+</code></pre></li>
+<li><p><strong>建構專案</strong>：</p>
+<pre><code class="bash language-bash"> npm run build -- --mode staging
+</code></pre>
+<p>或者，如果你使用 <code>yarn</code>：</p>
+<pre><code class="bash language-bash"> yarn build --mode staging
+</code></pre></li>
+</ul>
+<h2 id="eslintrcprocessenv">eslintrc 識別 process env 的問題</h2>
+<p>你遇到的錯誤 <code>'process' is not defined no-undef</code> 通常是因為 <code>eslint</code> 在檢查代碼時，無法識別全局的 <code>process</code> 變量。<code>process</code> 是 Node.js 中的一個全局對象，用於存取與當前運行的 Node.js 程序的相關信息，如環境變量。當在 Vue.js 應用中使用 <code>process.env</code> 來訪問環境變量時，你可能需要在你的 eslint 配置中做出相應的設定，讓 eslint 能夠識別 <code>process</code> 變量。</p>
+<p>在這個情況下，你可以在 <code>.eslintrc.js</code> (或是你的 eslint 配置文件) 中添加一個 <code>env</code> 屬性，來指定你的代碼是在 Node 環境中運行的。這樣 eslint 就會知道 <code>process</code> 是一個預定義的全局變量，不會再報 <code>no-undef</code> 錯誤。</p>
+<p>以下是 <code>.eslintrc.js</code> 文件中添加 Node 環境的一個例子：</p>
+<pre><code class="javascript language-javascript">module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+    node: true, // 加上這行
+  },
+  // 其餘配置...
+};
+</code></pre>
+<p>如果你的 Vue.js 程式碼已經沒有其他問題，那麼添加上述配置應該可以解決你遇到的錯誤。</p>
+<p>另外，你提供的路由配置代碼看起來已經很清晰了，但我會加上一些基本的註解，以提高代碼的可讀性：</p>
+<pre><code class="javascript language-javascript">// router/index.js
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '../views/Home.vue';
+import About from '../views/About.vue';
+
+// 定義路由配置，每個路由對應一個組件
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home // 主頁組件
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About // 關於頁面組件
+  }
+];
+
+// 創建並導出 vue-router 實例，使用 HTML5 的 History 模式
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL), // 使用環境變量設定基礎路徑
+  routes // 路由配置
+});
+
+export default router;
+</code></pre>
+<p>這段代碼已經蠻好的，主要就是處理那個 <code>eslint</code> 的錯誤問題。如果有其他特定的優化需求，或者有更多的功能要添加到路由配置中，請隨時告訴我！</p>
+<h2 id="eslintvuemultiwordcomponentnames">ESLint vue/multi-word-component-names</h2>
+<p>這個錯誤是來自於 ESLint，特別是 Vue.js 專案中使用 <code>vue/multi-word-component-names</code> 規則。這條規則要求 Vue.js 的組件名稱必須是多個單詞組合的，以避免跟現有的和未來的 HTML 元素以及其他組件發生命名衝突，提高代碼的可維護性和可讀性。</p>
+<p>解決這個問題的方法很簡單：將組件名稱從 <code>About</code> 改為包含多個單詞的名稱，比如 <code>AboutPage</code> 或者 <code>AboutView</code>。這裡我們選擇將 <code>About.vue</code> 組件的名稱改為 <code>AboutPage</code>。</p>
+<p>修改後的 <code>About.vue</code> 檔案如下所示，我還加入了一些基本的組件設定和註解：</p>
+<pre><code class="vue language-vue">&lt;template&gt;
+  &lt;div class="about-page"&gt;
+    &lt;!-- 這是關於頁面 --&gt;
+    &lt;h1&gt;這裡是關於頁&lt;/h1&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+// 使用 `export default` 定義並導出 Vue 組件
+export default {
+  name: 'AboutPage', // 組件名稱改為 'AboutPage'
+  // 其他組件選項...
+};
+&lt;/script&gt;
+
+&lt;style&gt;
+/* 這裡撰寫關於頁面的樣式 */
+.about-page {
+  /* 樣式內容 */
+}
+&lt;/style&gt;
+</code></pre>
+<p>記得在其他使用到這個組件的地方，也更新組件的引用名稱。例如，在路由配置文件中（通常是 <code>router/index.js</code> 或 <code>router.js</code>），更新組件的引入和路徑配置：</p>
+<pre><code class="javascript language-javascript">import AboutPage from '@/views/AboutPage.vue'; // 更新引入的組件名稱
+
+const routes = [
+  {
+    path: '/about',
+    name: 'About',
+    component: AboutPage, // 更新參考的組件名稱
+  },
+  // 其他路由...
+];
+</code></pre>
+<p>這樣就可以避免 ESLint 的 <code>vue/multi-word-component-names</code> 錯誤，並且保持代碼的整潔和規範性。</p>
